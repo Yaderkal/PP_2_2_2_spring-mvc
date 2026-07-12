@@ -1,15 +1,58 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>Автомобили</title>
+    <style>
+        /* ... стили как выше ... */
+        .active-btn {
+            background-color: #3498db;
+            color: white;
+        }
+    </style>
 </head>
 <body>
-<div>
-    <th:block th:each="msg : ${messages}">
-        <h1 th:text="${msg}"></h1>
-    </th:block>
+<h1>Автомобили</h1>
+
+<div style="text-align: center; margin: 20px 0;">
+    <span>Показать: </span>
+    <a th:href="@{/cars}"
+       class="btn"
+       th:classappend="${currentCount == null} ? 'active-btn' : ''">
+        Все
+    </a>
+    <a th:each="num : ${#numbers.sequence(1, 5)}"
+       th:href="@{/cars(count=${num})}"
+       class="btn"
+       th:classappend="${currentCount == num} ? 'active-btn' : ''"
+       th:text="${num}">
+        1
+    </a>
+    <a th:href="@{/cars(count=5)}"
+       class="btn"
+       th:classappend="${currentCount != null and currentCount >= 5} ? 'active-btn' : ''">
+        5+
+    </a>
+</div>
+
+<!-- Информация о количестве -->
+<div th:if="${cars != null and !cars.isEmpty()}">
+    <p>Показано: <strong th:text="${cars.size()}">0</strong>
+        из <strong th:text="${totalCount}">0</strong> автомобилей</p>
+</div>
+
+<!-- Карточки автомобилей -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
+    <div th:each="car : ${cars}"
+         style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
+        <h3 th:text="${car.brand} + ' ' + ${car.model}">Toyota Camry</h3>
+        <p>Год: <span th:text="${car.year}">2020</span></p>
+    </div>
+</div>
+
+<div th:if="${cars == null or cars.isEmpty()}"
+     style="text-align: center; padding: 50px; color: #999;">
+    Нет автомобилей для отображения
 </div>
 </body>
 </html>
