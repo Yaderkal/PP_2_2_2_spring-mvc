@@ -2,7 +2,7 @@ package web.model;
 
 
 import java.util.Objects;
-import web.model.Car;
+
 public class Car {
     String brand;
     String model;
