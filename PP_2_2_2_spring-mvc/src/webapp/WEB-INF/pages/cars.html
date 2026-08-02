@@ -2,57 +2,112 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Автомобили</title>
+    <title>Список автомобилей</title>
     <style>
-        /* ... стили как выше ... */
-        .active-btn {
-            background-color: #3498db;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .controls input[type="number"] {
+            width: 70px;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .controls button {
+            padding: 6px 18px;
+            background-color: #4CAF50;
             color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+        .controls button:hover {
+            background-color: #45a049;
+        }
+        .controls a {
+            margin-left: 15px;
+            color: #2196F3;
+            text-decoration: none;
+        }
+        .controls a:hover {
+            text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        .empty-message {
+            text-align: center;
+            color: #888;
+            padding: 20px;
         }
     </style>
 </head>
 <body>
-<h1>Автомобили</h1>
+<div class="container">
+    <h2>Каталог автомобилей</h2>
 
-<div style="text-align: center; margin: 20px 0;">
-    <span>Показать: </span>
-    <a th:href="@{/cars}"
-       class="btn"
-       th:classappend="${currentCount == null} ? 'active-btn' : ''">
-        Все
-    </a>
-    <a th:each="num : ${#numbers.sequence(1, 5)}"
-       th:href="@{/cars(count=${num})}"
-       class="btn"
-       th:classappend="${currentCount == num} ? 'active-btn' : ''"
-       th:text="${num}">
-        1
-    </a>
-    <a th:href="@{/cars(count=5)}"
-       class="btn"
-       th:classappend="${currentCount != null and currentCount >= 5} ? 'active-btn' : ''">
-        5+
-    </a>
-</div>
-
-<!-- Информация о количестве -->
-<div th:if="${cars != null and !cars.isEmpty()}">
-    <p>Показано: <strong th:text="${cars.size()}">0</strong>
-        из <strong th:text="${totalCount}">0</strong> автомобилей</p>
-</div>
-
-<!-- Карточки автомобилей -->
-<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;">
-    <div th:each="car : ${cars}"
-         style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
-        <h3 th:text="${car.brand} + ' ' + ${car.model}">Toyota Camry</h3>
-        <p>Год: <span th:text="${car.year}">2020</span></p>
+    <!-- Форма управления количеством -->
+    <div class="controls">
+        <form action="/cars" method="get">
+            <label for="count">Количество:</label>
+            <input type="number" id="count" name="count" min="1" max="5" placeholder="кол-во" />
+            <button type="submit">Показать</button>
+        </form>
+        <a href="/cars">Показать весь</a>
     </div>
-</div>
 
-<div th:if="${cars == null or cars.isEmpty()}"
-     style="text-align: center; padding: 50px; color: #999;">
-    Нет автомобилей для отображения
+    <!-- Таблица с автомобилями -->
+    <table>
+        <thead>
+        <tr>
+            <th>Марка</th>
+            <th>Модель</th>
+            <th>Год выпуска</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="car : ${cars}">
+            <td th:text="${car.brand}">Toyota</td>
+            <td th:text="${car.model}">Camry</td>
+            <td th:text="${car.prodYear}">2020</td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(cars)}">
+            <td colspan="3" class="empty-message">Нет доступных автомобилей</td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

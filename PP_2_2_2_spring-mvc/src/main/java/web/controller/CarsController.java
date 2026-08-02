@@ -22,15 +22,9 @@ public class CarsController {
     public CarsController(CarsDaoImpl carsDao) {
         this.carsDao = carsDao;
     }
-
     @GetMapping()
-    public String index(Model model) {
-        model.addAttribute("cars", carsDao.index());
-        return "cars";
-    }
-    @GetMapping(value = "/cars")
     public String count(
-        @RequestParam(required = false) Integer count, Model model) {
+        @RequestParam(value = "count", required = false) Integer count, Model model) {
         List<Car> cars;
         if (count == null || count >= 5 || count <=0) {
             cars = carsDao.index();
@@ -38,7 +32,7 @@ public class CarsController {
             cars = carsDao.count(count);
         }
         model.addAttribute("cars", cars);
-        model.addAttribute("count", count);
+        model.addAttribute("count", cars);
         return "cars";
 
     }
