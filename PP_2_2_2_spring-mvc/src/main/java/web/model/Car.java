@@ -4,9 +4,9 @@ package web.model;
 import java.util.Objects;
 
 public class Car {
-    String brand;
-    String model;
-    int prodYear;
+    private String brand;
+    private String model;
+    private int prodYear;
 
     public Car(String brand, String model, int prodYear) {
         this.brand = brand;
